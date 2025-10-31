@@ -1,3 +1,4 @@
+
 export default async function CustomerDetails ({params} : {params: {id: string }}) {
 
     const { id } = await params;

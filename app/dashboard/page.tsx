@@ -20,7 +20,7 @@ const fetchCommodity = async () => {
                 {id: "b", name: "Commodity B"},
                 {id: "c", name: "Commodity C"},
             ])
-        }, 1000);
+        }, 500);
     })
 }
 
