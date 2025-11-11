@@ -1,0 +1,7 @@
+
+# 忽略 Next.js 的編譯輸出
+.next
+# 忽略 node modules
+node_modules
+# 忽略 build 目錄
+dist

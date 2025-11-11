@@ -1,5 +1,5 @@
 "use server";
 
 export async function createCustomer(data: FormData) {
-    console.log("data", data);
+  console.log("data", data);
 }
