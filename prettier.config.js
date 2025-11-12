@@ -9,4 +9,6 @@ module.exports = {
   arrowParens: "always",
   // 使用 2 個空格進行縮進
   tabWidth: 2,
+
+  endOfLine: "lf",
 };
