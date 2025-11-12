@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import MyThreeScene from "@/components/MyThreeScene";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
           <Link href="/dashboard">Go to Dashboard</Link>
         </button>
+        <MyThreeScene />
       </main>
     </div>
   );
