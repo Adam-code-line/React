@@ -22,7 +22,7 @@ function Box(props) {
       {/* 几何体：一个 BoxBufferGeometry */}
       <boxGeometry args={[1, 1, 1]} />
       {/* 材质：一个 MeshStandardMaterial */}
-      <meshStandardMaterial color={"orange"} />
+      <meshStandardMaterial color={"red"} />
     </mesh>
   );
 }
