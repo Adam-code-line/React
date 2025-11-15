@@ -1,45 +1,68 @@
-"use client"; // 👈 必须添加此指令
+// components/MyThreeScene.js
 
-import React, { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import React, { Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+// 確保導入了所有需要的組件：OrbitControls, Stage, Text, useGLTF
+import { OrbitControls, Stage, Text, useGLTF } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
 
-// 一个可复用的 3D 立方体组件
-function Box(props) {
-  // useRef 用于在渲染循环中访问网格（mesh）
-  const meshRef = useRef();
+// ----------------------------------------------------
+// 導入 gltfjsx 生成的模型組件
+import { Model } from "./Scene.jsx";
+// ----------------------------------------------------
 
-  // useFrame 钩子将在每帧渲染时执行
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.5;
-      meshRef.current.rotation.y += delta * 0.5;
-    }
-  });
+// 預加載模型：這有助於緩存和減少載入錯誤
+useGLTF.preload("/scene.gltf");
 
-  return (
-    <mesh {...props} ref={meshRef}>
-      {/* 几何体：一个 BoxBufferGeometry */}
-      <boxGeometry args={[1, 1, 1]} />
-      {/* 材质：一个 MeshStandardMaterial */}
-      <meshStandardMaterial color={"red"} />
-    </mesh>
-  );
-}
-
-// 主场景组件，包含 Canvas
 export default function MyThreeScene() {
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
-      <Canvas>
-        {/* 环境光 */}
-        <ambientLight intensity={0.5} />
-        {/* 聚光灯 */}
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-        {/* 立方体实例 */}
-        <Box position={[0, 0, 0]} />
-        {/* 轨道控制器，允许您使用鼠标拖动和缩放场景 */}
-        <OrbitControls enableZoom={true} />
+    // 建議給 Canvas 一個明確的尺寸，例如佔用整個視口高度
+    <div style={{ height: "100vh", width: "100vw", backgroundColor: "black" }}>
+      <Canvas
+        shadows
+        // 調整相機位置，稍微拉遠一點，並設置 FOV
+        camera={{ position: [0, 0, 10], fov: 40 }}
+      >
+        {/* 燈光優化：確保場景有足夠的主光源，讓模型可見 */}
+        <ambientLight intensity={1.0} />
+        <directionalLight
+          position={[10, 10, 5]} // 來自右上方的主光
+          intensity={1.5}
+          castShadow
+        />
+
+        {/* Suspense 確保在模型載入時顯示 fallback */}
+        <Suspense
+          // 設置 Text 組件作為載入提示
+          fallback={
+            <Text position={[0, 0, 0]} color="white">
+              Loading...
+            </Text>
+          }
+        >
+          {/* Stage 組件提供了預設環境和柔和的燈光 */}
+          <Stage environment="city" intensity={0}>
+            {/* 調整模型比例：將 scale 設置得更小，例如 0.05，確保它在視野內 */}
+            <Model
+              scale={0.05}
+              position={[0, 0, 0]}
+              rotation={[0, Math.PI / 4, 0]} // 初始稍微旋轉一下，讓側面可見
+            />
+          </Stage>
+        </Suspense>
+
+        {/* 🌟 添加後期處理效果 🌟 */}
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={0.5} // 閾值，決定哪些亮度會產生輝光
+            intensity={1.5} // 輝光強度
+            luminanceSmoothing={0.9}
+            height={300}
+          />
+        </EffectComposer>
+
+        {/* 允許使用者控制視野，這是調試和查看模型的關鍵 */}
+        <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
       </Canvas>
     </div>
   );

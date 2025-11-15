@@ -1,16 +1,14 @@
-import Image from "next/image";
-import Link from "next/link";
-import MyThreeScene from "@/components/MyThreeScene";
+// app/page.tsx
 
-export default function Home() {
+// 只需要導入新的包裝組件
+import SceneClientWrapper from "../components/SceneClientWrapper";
+
+// 您的主頁面組件 (仍然是伺服器組件)
+export default function HomePage() {
   return (
-    <div>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-          <Link href="/dashboard">Go to Dashboard</Link>
-        </button>
-        <MyThreeScene />
-      </main>
-    </div>
+    <main>
+      {/* 渲染邊界組件 */}
+      <SceneClientWrapper />
+    </main>
   );
 }
